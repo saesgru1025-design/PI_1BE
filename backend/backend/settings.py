@@ -76,17 +76,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-from dotenv import load_dotenv, dotenv_values
-load_dotenv()
-config = dotenv_values(".env")
+import os
+from dotenv import load_dotenv
+
+# Carga el .env ubicado en PI_1BE/.env (un nivel arriba de /backend)
+env_path = BASE_DIR.parent / '.env'
+load_dotenv(dotenv_path=env_path, override=True)
+
 DATABASES = {
     'default': {
-        'ENGINE': config.get('DB_ENGINE'),
-        'NAME': config.get('DB_NAME'),
-        'USER': config.get('DB_USER'),
-        'PASSWORD': config.get('DB_PASSWORD'),
-        'HOST': config.get('DB_HOST'),
-        'PORT': config.get('DB_PORT'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'postgres'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'db.dkymomtbtgsajjclnzun.supabase.co'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
