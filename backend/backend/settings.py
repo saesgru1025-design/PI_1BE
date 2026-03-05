@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 
+
 ALLOWED_HOSTS = ['.onrender.com']
 
 DEBUG = False
@@ -20,9 +21,16 @@ DEBUG = False
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+from dotenv import load_dotenv
+
+ruta_env = BASE_DIR / '.env'
+load_dotenv(ruta_env)  # <--- ¡ESTA ES LA LÍNEA MÁGICA QUE FALTA!
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-6qu9nlgs+$po)avxcoyf86h^j!0y)q=z-*7ehmnhy25q01muz!'
@@ -126,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
