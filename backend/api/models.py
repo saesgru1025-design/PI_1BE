@@ -12,6 +12,18 @@ class User(models.Model):
     class Meta:
         db_table = 'users'
 
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
     def __str__(self):
         return self.name
 
