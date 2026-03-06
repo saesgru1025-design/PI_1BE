@@ -88,7 +88,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 class ActivityViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = None  # assigned below after import
 
     def get_serializer_class(self):
         from .serializers import ActivitySerializer
@@ -102,11 +101,14 @@ class ActivityViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         data = serializer.validated_data
-        # Asegurarse de que subject vacío no cause FK error
         if 'subject' in data and not data['subject']:
             data['subject'] = None
         logger.info(f"Guardando actividad '{data.get('title')}' para usuario {self.request.user.id}")
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except Exception as e:
+            logger.error(f"Error al crear actividad: {e}")
+            raise
 
 
 # ─── SUBTASKS ─────────────────────────────────────────────────────────────────
