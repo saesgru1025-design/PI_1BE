@@ -67,7 +67,14 @@ class SubtaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        return Subtask.objects.filter(activity__user_id=user_id)
+        queryset = Subtask.objects.filter(activity__user_id=user_id)
+        
+        # Permitir filtrar por actividad específica como pide el frontend
+        activity_id = self.request.query_params.get('activity')
+        if activity_id:
+            queryset = queryset.filter(activity_id=activity_id)
+            
+        return queryset
 
 class RegisterUserView(APIView):
     def post(self, request):
