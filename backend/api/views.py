@@ -16,7 +16,8 @@ from .models import User, Activity, Subtask, Subject
 def health_check(request):
     return Response({
         "status": "ok",
-        "message": "¡Hola profesor la API está FUNCIONANDO!"
+        "message": "¡API StudyCleaner v1.0.5 FUNCIONANDO!",
+        "version": "1.0.5"
     })
 
 
