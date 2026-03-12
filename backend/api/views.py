@@ -50,7 +50,8 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             raise exceptions.AuthenticationFailed('Contraseña incorrecta')
 
         from rest_framework_simplejwt.tokens import RefreshToken
-        refresh = RefreshToken()
+        refresh = RefreshToken.for_user(user)
+        # Aseguramos que user_id esté presente por compatibilidad
         refresh['user_id'] = str(user.id)
 
         access = refresh.access_token
@@ -337,7 +338,7 @@ class RegisterUserView(APIView):
         )
 
         from rest_framework_simplejwt.tokens import RefreshToken
-        refresh = RefreshToken()
+        refresh = RefreshToken.for_user(user)
         refresh['user_id'] = str(user.id)
 
         access = refresh.access_token
