@@ -41,14 +41,18 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class SubtaskSerializer(serializers.ModelSerializer):
+    activity_title = serializers.CharField(source='activity.title', read_only=True)
+    activity_type  = serializers.CharField(source='activity.type',  read_only=True)
+
     class Meta:
         model = Subtask
         fields = [
-            'id', 'activity', 'title', 'description',
+            'id', 'activity', 'activity_title', 'activity_type',
+            'title', 'description',
             'scheduled_date', 'estimated_hours', 'status',
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'activity_title', 'activity_type']
         extra_kwargs = {
             'description': {'required': False, 'allow_blank': True, 'allow_null': True},
             'status': {'required': False, 'default': 'pendiente'},

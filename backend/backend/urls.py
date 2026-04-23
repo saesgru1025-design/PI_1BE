@@ -8,7 +8,9 @@ from api.views import (
     ActivityViewSet,
     SubtaskViewSet,
     SubjectViewSet,
-    RegisterUserView
+    RegisterUserView,
+    UserProfileView,
+    overload_list,
 )
 
 router = DefaultRouter()
@@ -22,5 +24,7 @@ urlpatterns = [
     path('api/auth/register/', RegisterUserView.as_view(), name='register'),
     path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/me/', UserProfileView.as_view(), name='user_profile'),
+    path('api/overload/', overload_list, name='overload_list'),
     path('api/', include(router.urls)),
 ]
