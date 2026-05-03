@@ -111,30 +111,38 @@ class UserProfileView(APIView):
     def patch(self, request):
         user = request.user
         limit = request.data.get('daily_hour_limit')
+        name = request.data.get('name')
+        email = request.data.get('email')
 
-        if limit is None:
-            return Response(
-                {'error': 'Se requiere el campo daily_hour_limit'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        update_fields = []
 
-        try:
-            limit = int(limit)
-        except (TypeError, ValueError):
-            return Response(
-                {'error': 'Valor inválido para daily_hour_limit'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if limit is not None:
+            try:
+                limit = int(limit)
+                if 1 <= limit <= 24:
+                    user.daily_hour_limit = limit
+                    update_fields.append('daily_hour_limit')
+                else:
+                    return Response({'error': 'El límite debe estar entre 1 y 24 horas'}, status=status.HTTP_400_BAD_REQUEST)
+            except (TypeError, ValueError):
+                return Response({'error': 'Valor inválido para daily_hour_limit'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if limit < 1 or limit > 24:
-            return Response(
-                {'error': 'El límite debe estar entre 1 y 24 horas'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if name:
+            user.name = name.strip()
+            update_fields.append('name')
 
-        user.daily_hour_limit = limit
-        user.save(update_fields=['daily_hour_limit'])
-        logger.info(f"Usuario {user.email} actualizó su límite diario a {limit}h")
+        if email:
+            email = email.strip()
+            if User.objects.filter(email__iexact=email).exclude(id=user.id).exists():
+                return Response({'error': 'Este email ya está en uso por otro usuario'}, status=status.HTTP_400_BAD_REQUEST)
+            user.email = email
+            update_fields.append('email')
+
+        if not update_fields:
+            return Response({'error': 'No se proporcionaron campos para actualizar'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.save(update_fields=update_fields)
+        logger.info(f"Usuario {user.id} actualizó perfil: {', '.join(update_fields)}")
 
         return Response({
             'id': str(user.id),
