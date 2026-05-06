@@ -155,7 +155,16 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://estebancrofrontend.vercel.app",
+    "http://localhost:5173",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://estebancrofrontend.vercel.app",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True # Mantenemos esto por si acaso, pero las anteriores son más seguras
 
 LOGGING = {
     'version': 1,
