@@ -7,6 +7,7 @@ class User(models.Model):
     email = models.EmailField(max_length=150, unique=True)
     password_hash = models.CharField(max_length=255)
     daily_hour_limit = models.IntegerField(default=6)
+    profile_image_url = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

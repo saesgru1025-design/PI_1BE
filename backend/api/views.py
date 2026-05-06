@@ -68,6 +68,7 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
                 'name': user.name,
                 'email': user.email,
                 'daily_hour_limit': user.daily_hour_limit,
+                'profile_image_url': user.profile_image_url,
             }
         }
 
@@ -106,6 +107,7 @@ class UserProfileView(APIView):
             'name': user.name,
             'email': user.email,
             'daily_hour_limit': user.daily_hour_limit,
+            'profile_image_url': user.profile_image_url,
         })
 
     def patch(self, request):
@@ -138,6 +140,11 @@ class UserProfileView(APIView):
             user.email = email
             update_fields.append('email')
 
+        profile_image_url = request.data.get('profile_image_url')
+        if profile_image_url is not None:
+            user.profile_image_url = profile_image_url.strip()
+            update_fields.append('profile_image_url')
+
         if not update_fields:
             return Response({'error': 'No se proporcionaron campos para actualizar'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -149,6 +156,7 @@ class UserProfileView(APIView):
             'name': user.name,
             'email': user.email,
             'daily_hour_limit': user.daily_hour_limit,
+            'profile_image_url': user.profile_image_url,
         })
 
 
@@ -584,6 +592,7 @@ class RegisterUserView(APIView):
                 'email': user.email,
                 'name': user.name,
                 'daily_hour_limit': user.daily_hour_limit,
+                'profile_image_url': user.profile_image_url,
             },
             'access': str(access),
             'refresh': str(refresh)
